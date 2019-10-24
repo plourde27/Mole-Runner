@@ -1,0 +1,1365 @@
+
+
+<!DOCTYPE html>
+<html>
+  	<head>
+    	<meta charset="utf-8">
+    	<title>New Webpage</title>
+    	<style>
+    		#game {
+    			display: block;
+    			margin: 0 auto;
+    		}
+    	</style>
+  	</head>
+  	<body>
+		<audio id="intro" src="intro.mp3" loop="loop" type="audio/mpeg"></audio>
+    <audio id="mole" src="mole.mp3" loop="loop" type="audio/mpeg"></audio>
+    <audio id="victory" src="hero_victory.mp3" loop="loop" type="audio/mpeg"></audio>
+		<canvas id="game" display="block" margin="0 auto"></canvas>
+  	</body>
+  	<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js\"></script>
+	<script src="https://cdn.jsdelivr.net/processing.js/1.4.8/processing.min.js"></script>
+  	<script>
+  		var playSong = function(songName) {
+  			console.log(songName);
+  			var song = document.getElementById(songName);
+  			song.currentTime = 0;
+  			song.play();
+  		};
+      playSong("intro");
+  		var pauseSong = function(songName) {
+  			document.getElementById(songName).pause();
+  		};
+
+  		var programCode = function(processingInstance) {
+    		with (processingInstance) {
+    			size(900, 600);
+    			frameRate(60);
+    			angleMode = "degrees";
+
+    			{
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+angleMode = "degrees";
+
+/*
+Welcome to Mole Runner!
+Made by Plourde27 in September 2019
+
+*/
+
+/**
+@HIGH_SCORES
+Hanson Tay: 13562
+Miles M: 9865
+lpark: 5431
+Plourde27 (creator): 4641
+mr.nobody12345: 4251
+🔥Cool Dude🔥: 4178
+BloodyBaron: 4167
+matteasvanblerk: 4167
+KingCode: 3328
+Just Myself: 3120
+#Pusheencat lover: 2986
+DrewLikesMath: 2754
+ls26392: 2599
+high score 2599
+heathd: 2296
+IsaacAllan: 2280
+Rob611: 2196
+🀄︎Toothless1🀄︎: 2157
+BrenErso: 2136
+Admiral Betasin: 1996
+halfamerican: 1995
+chonnge: 1934
+Creator: 1854
+Jeremiah: 1707
+Master of Puppets: 1695
+Kyle Thunder: 1634
+FlashPoint Programming: 1544
+swensaar: 1527
+kavi.z.rao: 1475
+๓r. ēนງēຖē krค๖Ş: 1387
+UNKOWN! :): 1325
+G. A. B.: 1210
+Blank: 1162
+Will Kressin: 1115
+тнє ρнαитσм ραитнєя: 1111
+Michael: 1096
+Ayam Kuat: 1052
+Jayson: 1035
+Vitor Carvalho: 1016
+supersmashbrother: 978
+Tanaya Holley 136825: 925
+Schwartz, Luke, 869
+🆂🅼🅰🆁🆃 🅿🆁🅾🅶🆁🅰🅼🅼🅸🅽🅶: 829
+pori: 637
+
+@BLOCKS
+HCl: kills you upon touch
+CO: kills you unless you can quickly get to H20
+H20: negates CO effect
+SiO2: can't be jumped out of
+Mole Machine: sends you back to an earlier part of the game. If you bump into a previous version of yourself you instantly die.
+
+@MORE_GAMES
+ULTIMATE SKI RACE 2: extensive skiing game with 6 real-life ski mountains, racing, shop, achievements, quests:
+https://www.khanacademy.org/computer-programming/ultimate-ski-race-2-official-release/6165327433269248
+
+COLOR ARENA: arena survival game with up to 47 AI players, achievements, shop, fun arena matches, different characters: https://www.khanacademy.org/computer-programming/color-arena-official-release/5911728555196416
+
+TRACKS AND BUILDINGS: sandbox train-track building game with levels. Winner of a Golden Winston!
+https://www.khanacademy.org/computer-programming/tracks-buildings-contest-entry/5499501521829888
+
+Even more games at my profile: https://www.khanacademy.org/profile/plourde27/
+
+@SUBSCRIBE
+Go to this link to subscribe to me and recieve a notification whenever I release a new program:
+https://www.khanacademy.org/computer-programming/subscribe-to-plourde27/6687771960573952
+
+**/
+
+
+
+
+
+
+
+
+
+
+
+var dispscore;
+var mscore = 0;
+var sf = 1.5;
+
+scale(sf);
+
+var scorenum = 23;
+
+var firstMole = true;
+
+var urgent = false;
+
+var tv = 0;
+
+var ic;
+
+var invispress = false;
+
+var coinfac = 8;
+
+var coincolors = [color(110, 67, 10), color(130, 132, 148), color(196, 178, 96)];
+var ncc = [color(90, 47, 0), color(110, 112, 128), color(176, 158, 76)];
+
+var mtm = [];
+for (var i = 10 ; i < 160 ; i += 10) {
+    mtm.push([random(10, 90), i]);
+}
+
+var goToPlay = false;
+var firstplay = true;
+
+var keywords = ["HCl", "H20", "SiO2", "O2", "CO"];
+var keycolors = [[173, 51, 14], [33, 60, 166], [87, 87, 76], [196, 178, 96], [72, 173, 67]];
+var texts = ["kills you on touch.", "can be walked through without damage", "doesn't do damage, but won't let you jump", "   gives you extra points", "will briefly negate the positive effect of O2", ];
+
+var deathMessage = "You fell into a pool of HCl";
+var dms = ["You fell into a pool of HCl", "You fell into a pool of CO", "You ran into a past version of yourself"];
+
+var clicked = false;
+
+var gameover = false;
+
+var fp;
+
+var allBlocks = [];
+
+var spl = [];
+
+var score = 0;
+
+textFont(createFont("Avenir"));
+textAlign(CENTER, CENTER);
+
+var f = false;
+
+var rec = [];
+
+var nb;
+
+rectMode(CENTER);
+
+var keys = [];
+
+keyPressed = function() {
+    keys[keyCode] = true;
+};
+
+keyReleased = function() {
+    keys[keyCode] = false;
+};
+
+
+var scene = "Menu";
+var blocks;
+
+var drawPlayer = function(x, y, mv, sc, c) {
+    if (!sc) {
+        sc = 1.3;
+    }
+    if (!c) {
+        c = color(0, 0, 0);
+    }
+    translate(x, y + 10);
+    scale(sc / 1.5);
+    translate(-x, -y - 20);
+    fill(c);
+    noStroke();
+    stroke(c);
+    strokeWeight(2);
+    mv *= 1.5;
+    fill(214, 168, 128);
+    noStroke();
+    beginShape();
+    vertex(x - 9, y + 22);
+    vertex(x - 9, y + 16);
+    vertex(x - 6, y + 16);
+    vertex(x - 6, y + 22);
+    endShape();
+    fill(61, 56, 46);
+    beginShape();
+    noStroke();
+    vertex(x - 20, y + 20);
+    vertex(x - 16, y + 19.8);
+    vertex(x - 12, y + 20.2);
+    vertex(x - 8, y + 19.8);
+    vertex(x - 6, y + 19.9);
+    vertex(x - 3, y + 20);
+    vertex(x, y + 18);
+    vertex(x + 5, y + 15);
+    vertex(x + 8, y + 14);
+    vertex(x + 12, y + 12);
+    vertex(x + 15, y + 10);
+    vertex(x + 15, y + 7);
+    vertex(x + 9, y + 4);
+    vertex(x + 5, y + 3);
+    vertex(x + 3, y + 2.5);
+    vertex(x - 1, y + 3);
+    vertex(x - 5, y + 5);
+    vertex(x - 9, y + 7);
+    vertex(x - 15, y + 12);
+    vertex(x - 17, y + 14);
+    endShape();
+    fill(230, 159, 199);
+    beginShape();
+    vertex(x + 15, y + 7);
+    vertex(x + 16.5, y + 7.5);
+    vertex(x + 16.5, y + 9.5);
+    vertex(x + 15, y + 10);
+    endShape();
+    fill(214, 168, 128);
+    beginShape();
+    vertex(x + 6, y + 15);
+    vertex(x + 9, y + 13.4);
+    vertex(x + 12, y + 20);
+    vertex(x + 10.3, y + 18);
+    vertex(x + 11.2, y + 20);
+    vertex(x + 9.5, y + 18);
+    vertex(x + 10.4, y + 20);
+    vertex(x + 8.7, y + 18);
+    vertex(x + 9.6, y + 20);
+    endShape();
+
+    noStroke();
+};
+
+var binds;
+
+var xincs;
+var lastMole;
+var xinc;
+
+var Player = function() {
+    this.COMoler = 10000000000;
+    this.x = 100;
+    this.y = 350;
+    this.yvel = 0;
+    this.falls = 0;
+    this.valid = false;
+    this.mv = 0;
+    this.speed = 3;
+    this.ospeed = 3;
+    this.invis = 100;
+    this.invisible = false;
+    this.Moled = false;
+    this.MoleMoler = 0;
+    this.invisMole = 0;
+};
+
+Player.prototype.draww = function() {
+    if (!this.invisible) {
+        drawPlayer(this.x, this.y, this.mv);
+    }
+    else {
+        drawPlayer(this.x, this.y, this.mv, 1.3, color(100, 100, 100));
+    }
+     resetMatrix(); scale(sf);
+    translate(-this.x + 100, 0);
+};
+
+Player.prototype.die = function(d) {
+    if (!gameover) {
+        deathMessage = dms[d];
+    }
+    if (!gameover) {
+      pauseSong("mole");
+      playSong("victory");
+    }
+    gameover = true;
+
+};
+
+var findPos;
+
+Player.prototype.update = function() {
+    this.COMoler --;
+    if (this.COMoler < 0) {
+        this.COing = false;
+    }
+
+    if (keys[32] && this.invis === 100) {
+        this.invisible = true;
+    }
+    if (this.invisible) {
+        this.invis -= 0.8;
+        if (this.invis <= 0) {
+            this.invis = 0;
+            this.invisible = false;
+        }
+    }
+    else {
+        this.invis += 0.3;
+    }
+    this.invis = constrain(this.invis, 0, 100);
+    if (keys[32] && this.invis <= 0) {
+        invispress = true;
+    }
+    if (!keys[32]) {
+        invispress = false;
+    }
+
+    this.ospeed += 0.0001;
+    if (keys[RIGHT]) {
+        this.speed = this.ospeed + 2;
+    }
+    else {
+        this.speed = this.ospeed;
+    }
+    this.thr = 340;
+    this.inPool = false;
+    this.pool = -1;
+    for (var i = 0 ; i < blocks.length ; i++) {
+        if (blocks[i].pool) {
+            if (this.y >= 338) {
+                if (this.x >= blocks[i].x + 16 && this.x <= blocks[i].x + blocks[i].w - 16) {
+                    this.inPool = true;
+                    this.pool = blocks[i].t;
+                    this.thr = 350;
+                }
+                else if (this.x >= blocks[i].x && this.x <= blocks[i].x + 16) {
+                    this.thr = 340 + sin((Math.PI / 180) * (this.x - blocks[i].x) * (90 / 16)) * 10;
+                    this.pool = blocks[i].t;
+                }
+                else if (this.x >= blocks[i].x && this.x <= blocks[i].x + 16) {
+                    this.thr = 340 + sin((Math.PI / 180) * (blocks[i].x + blocks[i].w - this.x) * (90 / 16)) * 10;
+                    this.pool = blocks[i].t;
+                }
+            }
+        }
+    }
+    if (this.jumped) {
+        this.landed = true;
+    }
+    else {
+        this.landed = false;
+    }
+    this.falling = true;
+    if (!this.Moled) {
+        rec[round(this.x)] = [this.y, this.mv];
+        this.x += this.speed;
+        this.yvel += 0.35;
+        this.y += this.yvel;
+    }
+    for (var i = 0 ; i < blocks.length ; i++) {
+        for (var j = 0 ; j < blocks[i].O2.length ; j++) {
+            if (dist(this.x, this.y, blocks[i].O2[j][0], blocks[i].y - 20) < 15 && blocks[i].O2[j][2] && !this.COing) {
+                score += (blocks[i].O2[j][1] + 1) * coinfac * (6.02 / Math.pow(10, (scorenum - 23)));
+                mscore += (blocks[i].O2[j][1] + 1) * coinfac;
+                blocks[i].O2[j][2] = false;
+            }
+        }
+        if (this.x >= blocks[i].x && this.x <= blocks[i].x + 100 && blocks[i].MoleMachine) {
+            this.Moled = true;
+            this.xn = 0;
+            this.timind = i;
+            for (var j = xincs.length - 2 ; j >= 0 ; j--) {
+                this.xn += xincs[j + 1] - xincs[j];
+                if (this.xn >= 3000) {
+                    this.nx = xincs[j];
+                    break;
+                }
+            }
+            lastMole = this.xn + 4800;
+            xinc = this.nx;
+            if (tv > 250) {
+                binds.push(i);
+            }
+            this.ny = 340;
+        }
+        if (this.x >= blocks[i].x - 10 && this.x <= blocks[i].x + blocks[i].w + 10 && this.y <= blocks[i].y && this.y >= blocks[i].y - 15 && this.yvel >= 0 && !blocks[i].pool && !blocks[i].MoleMachine) {
+                this.yvel = 0;
+                this.valid = true;
+                this.falls = 2;
+                this.jumped = false;
+                this.landed = true;
+                this.y = blocks[i].y - 15;
+                this.mv += this.speed;
+        }
+        if (this.x >= blocks[i].x - 10 && this.x <= blocks[i].x + blocks[i].w + 10 && this.y >= blocks[i].y && this.y <= blocks[i].y + 15 && this.yvel <= 0 && !blocks[i].pool && !blocks[i].MoleMachine) {
+                this.yvel = 0;
+                this.valid = true;
+                this.jumped = false;
+                this.landed = true;
+                this.falls = 0;
+                this.y = blocks[i].y + 15;
+        }
+    }
+    if (this.y > this.thr) {
+        this.y = this.thr;
+        this.yvel = 0;
+        this.falls = 2;
+        this.valid = true;
+        this.landed = true;
+        this.jumped = false;
+        this.mv += this.speed;
+    }
+    if (keys[UP] && !gameover && this.falls > 0 && this.valid && this.pool !== 3) {
+        this.jumped = true;
+        this.yvel = -8;
+        this.valid = false;
+        this.falls --;
+    }
+    if (!keys[UP]) {
+        this.valid = true;
+    }
+    if (!this.landed) {
+        this.falls = 0;
+    }
+    if (this.pool === 1) {
+        this.die(0);
+    }
+    if (this.pool === 2) {
+        this.COMoler = 300;
+        this.COing = true;
+    }
+    if (this.pool === 0) {
+        this.COMoler = 10000000000000;
+    }
+    if (!this.Moled) {
+        if (findPos(this.x) && Math.abs(this.y - findPos(this.x)[0]) < 5 && this.pool !== 0 && !this.invisible) {
+            this.MoleMoler += 1;
+            if (this.MoleMoler >= 10) {
+                this.die(2);
+            }
+        }
+        else {
+            this.MoleMoler = 0;
+        }
+    }
+    else {
+        this.MoleMoler = 0;
+    }
+};
+
+Player.prototype.display = function() {
+    this.draww();
+    this.update();
+};
+
+var Player1 = new Player();
+
+var findPos = function(x) {
+    x = round(x);
+    for (var i = x ; i > x - 10 ; i--) {
+        if (rec[x]) {
+            return rec[x];
+        }
+        if (rec[x + (x - i)]) {
+            return rec[x + (x - i)];
+        }
+    }
+    return 0;
+};
+
+var rpos = [];
+var tks = [];
+
+for (var j = 0 ; j < 100 ; j++) {
+    rpos.push([]);
+    for (var i = 0 ; i < random(60, 90) ; i++) {
+        var ang = random(0, 360);
+        var dst = random(0, 30);
+        var x = cos((Math.PI / 180) * ang) * dst;
+        var y = sin((Math.PI / 180) * ang) * dst;
+        rpos[rpos.length - 1].push([color(random(0, 20), random(100, 240), random(0, 50)), x, y, random(10, 40)]);
+    }
+}
+
+var initTree = function() {
+    return round(random(0, 99));
+};
+
+for (var i = 0 ; i < 8 ; i++) {
+    tks.push(initTree());
+}
+
+var inds = [];
+var binds = [];
+var trees = [];
+
+var treeImg = createGraphics(100, 120, JAVA2D);
+
+if (treeImg) {
+    treeImg.rectMode(CENTER);
+    treeImg.background(0, 0, 0, 0);
+    treeImg.noStroke();
+    treeImg.fill(71, 46, 4);
+    treeImg.rect(50, 60, 20, 60);
+    for (var i = 0 ; i < 20 ; i++) {
+        treeImg.fill(random(0, 20), random(100, 200), random(0, 20));
+        var d = random(0, 20);
+        var ang = random(0, 360);
+        var w = random(20, 30);
+        treeImg.ellipse(50 + d * cos((Math.PI / 180) * ang), 35 + d * sin((Math.PI / 180) * ang), w, w);
+    }
+    //treeImg.filter(BLUR, 1.5);
+}
+
+var mtnImg = createGraphics(250, 250, JAVA2D);
+
+if (mtnImg) {
+    mtnImg.background(0, 0, 0, 0);
+    mtnImg.noStroke();
+    mtnImg.fill(180, 180, 180);
+    mtnImg.triangle(0, 250, 125, 0, 250, 250);
+    mtnImg.fill(240, 240, 240);
+    mtnImg.beginShape();
+    mtnImg.vertex(125, 0);
+    mtnImg.vertex(95, 60);
+    for (var j = 100 ; j < 155 ; j += 5) {
+        if ((j / 5) % 2 === 0) {
+            mtnImg.vertex(j, 57);
+        }
+        else {
+            mtnImg.vertex(j, 63);
+        }
+    }
+    mtnImg.vertex(155, 60);
+    mtnImg.vertex(125, 0);
+    mtnImg.endShape();
+    mtnImg.filter(BLUR, 1.5);
+}
+
+var Tree = function(x) {
+    this.x = x;
+    this.y = random(300, 320);
+    this.t = initTree();
+};
+
+Tree.prototype.update = function() {
+    if (this.x <= -100) {
+        inds.push(trees.indexOf(this));
+    }
+    this.x -= (3 - (320 - this.y) / 20);
+    /*rectMode(CENTER);
+    noStroke();
+    fill(71, 46, 4);
+    rect(this.x + 25, this.y + 10, 20, 60);
+    for (var i = 0 ; i < rpos[this.t].length ; i++) {
+        fill(rpos[this.t][i][0]);
+        ellipse(this.x + 25 + rpos[this.t][i][1], this.y - 30 + rpos[this.t][i][2], rpos[this.t][i][3], rpos[this.t][i][3]);
+    }*/
+
+};
+
+for (var i = -100 ; i < 800 ; i += 100) {
+    trees.push(new Tree(i));
+}
+
+var blocks = [];
+
+var colors = [[33, 60, 166], [173, 51, 14], [72, 173, 67], [87, 87, 76]];
+
+var tmparts = [];
+
+var chemicalNames = ["H20", "HCl", "CO", "Si02", "O2"];
+
+var Block = function(x, y, w, t, p) {
+    this.O2 = [];
+    this.x = x;
+    this.y = y;
+    this.w = w;
+    this.h = 10;
+    if (p) {
+        this.past = true;
+    }
+    if (t === "tm") {
+        this.MoleMachine = true;
+    }
+    else if (t !== undefined) {
+        this.pool = true;
+        this.poolparts = [];
+        if (t === -1) {
+            this.t = round(random(-0.4, colors.length - 0.5000001));
+        }
+        else {
+            this.t = t; //0 = H20, 1 = HCl, 2 = CO, 3 = SiO2
+        }
+    }
+    if (!this.pool && !this.MoleMachine && random(0, 1) < 0.3 && !this.past) {
+        for (var i = this.x + 25; i < this.x + this.w; i += 25 * round(random(1, 2))) {
+            this.O2.push([i, round((400 - this.y) / 100) - 1, true]);
+        }
+    }
+};
+
+Block.prototype.pooldraw = function() {
+    fill(colors[this.t][0], colors[this.t][1], colors[this.t][2], 200);
+    rect(this.x + this.w / 2, 358, this.w - 32, 16);
+    arc(this.x + this.w - 16, 350, 32, 32, 0, 90 * (Math.PI / 180));
+    arc(this.x + 16, 350, 32, 32, 90 * (Math.PI / 180), 180 * (Math.PI / 180));
+    this.spl = [];
+    for (var i = 0 ; i < this.poolparts.length ; i++) {
+        textSize(8);
+        textFont(createFont("monospace"));
+        text(chemicalNames[this.t], this.poolparts[i][1], this.poolparts[i][2]);
+        this.poolparts[i][1] = this.poolparts[i][0] + sin((Math.PI / 180) * this.poolparts[i][2] * 9) * 8;
+        this.poolparts[i][2] -= 0.5;
+        if (this.poolparts[i][2] < 300) {
+            this.spl.push(i);
+        }
+    }
+    for (var i = this.spl.length - 1 ; i >= 0 ; i --) {
+        this.poolparts.splice(this.spl[i], 1);
+    }
+    if (frameCount % 10 === 0) {
+        this.poolparts.push([random(this.x, this.x + this.w), 0, 350]);
+    }
+};
+
+Block.prototype.update = function() {
+    if (this.MoleMachine) {
+        fill(0, 0, 0, 30);
+        rect(this.x + 50, 175, 100, 350);
+        fill(0, 0, 0);
+        for (var i = 0 ; i < tmparts.length ; i++) {
+            ellipse(this.x + tmparts[i][0], tmparts[i][1], 5, 5);
+        }
+    }
+    else if (this.pool) {
+        fill(colors[this.t][0], colors[this.t][1], colors[this.t][2]);
+        rect(this.x + this.w / 2, 358, this.w - 32, 16);
+        arc(this.x + this.w - 16, 350, 32, 32, 0, 90 * (Math.PI / 180));
+        arc(this.x + 16, 350, 32, 32, 90 * (Math.PI / 180), 180 * (Math.PI / 180));
+    }
+    else {
+        fill(214, 174, 101);
+        rect(this.x + this.w / 2, this.y, this.w, this.h, 5);
+        for (var i = 0 ; i < this.O2.length ; i++) {
+            if (this.O2[i][2]) {
+                translate(this.O2[i][0], this.y - 20);
+                scale(cos((Math.PI / 180) * frameCount * 3), 1);
+                translate(-this.O2[i][0], -this.y + 20);
+                fill(coincolors[this.O2[i][1]]);
+                ellipse(this.O2[i][0], this.y - 20, 20, 20);
+                stroke(ncc[this.O2[i][1]]);
+                noFill();
+                textSize(9);
+                fill(ncc[this.O2[i][1]]);
+                text("O2", this.O2[i][0], this.y - 20);
+                noStroke();
+                 resetMatrix(); scale(sf);
+                translate(-Player1.x + 100, 0);
+            }
+        }
+    }
+    if (Player1.x - this.x > this.w + 100) {
+        binds.push(blocks.indexOf(this));
+    }
+};
+
+var gameGraphics = function() {
+    background(130, 184, 194);
+    fill(255, 255, 0);
+    ellipse(500, 100, 100, 100);
+
+    fill(43, 135, 27);
+    rect(300, 340, 600, 20);
+    var start = (-Player1.x / 10) % 250;
+    for (var i = start - 250 ; i < 600 ; i += 250) {
+        noStroke();
+        fill(180, 180, 180);
+        triangle(i, 330, i + 125, 80, i + 250, 330);
+        fill(240, 240, 240);
+        beginShape();
+        vertex(i + 125, 80);
+        vertex(i + 95, 140);
+        for (var j = 100 ; j < 155 ; j += 5) {
+            if ((j / 5) % 2 === 0) {
+                vertex(j + i, 137);
+            }
+            else {
+                vertex(j + i, 143);
+            }
+        }
+        vertex(i + 155, 140);
+        vertex(i + 125, 80);
+        endShape();
+    }
+    if (frameCount % 20 === 0) {
+        trees.push(new Tree(700));
+    }
+    for (var i = 0 ; i < trees.length ; i++) {
+        trees[i].update();
+    }
+    fill(255, 255, 255, 200);
+    rect(300, 200, 600, 400);
+    fill(214, 174, 101);
+    noStroke();
+    rect(300, 375, 600, 50);
+    fill(184, 144, 71);
+    beginShape();
+    var pxm = -(Player1.x % 20);
+    vertex(pxm, 350);
+    vertex(pxm + 635, 350);
+    vertex(pxm + 635, 360);
+    var j = 0;
+    for (var i = pxm + 630 ; i > pxm ; i -= 10) {
+        if (j % 2 === 0) {
+            vertex(i, 363);
+        }
+        else {
+            vertex(i, 357);
+        }
+        j += 1;
+    }
+    vertex(0, 360);
+    vertex(0, 350);
+    endShape();
+
+};
+
+var pools = [];
+
+var blockGen = [
+    [1500,
+        [100, 300, 100],
+        [300, 250, 100],
+        [500, 200, 100],
+        [700, 250, 100],
+        [900, 200, 100],
+        [1100, 250, 100],
+        [1300, 300, 100],
+        [700, 350, 100, 1]
+    ],
+    [1000,
+        [100, 300, 50],
+        [300, 200, 100],
+        [550, 150, 50],
+        [650, 100, 100],
+        [850, 100, 100],
+        [750, 350, 100, 0]
+    ],
+    [700,
+        [100, 300, 100],
+        [300, 200, 100],
+        [500, 300, 100],
+        [300, 350, 100, 1]
+    ],
+    [1100,
+        [100, 250, 50],
+        [200, 250, 50],
+        [300, 300, 500],
+        [300, 150, 500],
+        [900, 250, 100],
+        [200, 350, 600, 1]
+    ],
+    [500,
+        [100, 300, 500],
+        [200, 200, 300],
+        [300, 100, 100],
+    ],
+    [1900,
+        [100, 300, 200],
+        [400, 250, 200],
+        [700, 200, 200],
+        [1000, 150, 200],
+        [1300, 100, 200],
+        [1600, 100, 200],
+        [1300, 350, 600, 0]
+    ],
+    [1000,
+        [100, 300, 800],
+        [200, 200, 100],
+        [300, 100, 100],
+        [400, 200, 100],
+        [500, 100, 100],
+        [600, 200, 100],
+        [700, 100, 100],
+        [800, 200, 100],
+        [100, 350, 800, 1]
+    ],
+    [700,
+        [100, 300, 50],
+        [200, 225, 50],
+        [300, 150, 100],
+        [450, 150, 100],
+        [500, 350, 100, 1]
+    ],
+    [1300,
+        [100, 250, 100],
+        [300, 300, 100],
+        [500, 300, 100],
+        [700, 250, 100],
+        [900, 200, 100],
+        [900, 300, 100],
+        [1100, 250, 100],
+        [925, 350, 100, 3]
+    ],
+    [1100,
+        [100, 300, 100],
+        [300, 250, 500],
+        [900, 300, 100],
+        [400, 350, 100, 2],
+        [600, 350, 100, 0]
+    ],
+    [1200,
+        [100, 300, 50],
+        [200, 250, 50],
+        [300, 200, 50],
+        [400, 150, 50],
+        [500, 100, 50],
+        [600, 100, 50],
+        [700, 100, 50],
+        [800, 100, 50],
+        [900, 100, 50],
+        [1000, 100, 50],
+        [800, 350, 100, 0]
+    ],
+    [1000,
+        [100, 300, 200],
+        [400, 300, 200],
+        [700, 300, 200],
+        [400, 350, 100, 3]
+    ],
+    [1700,
+        [100, 300, 100],
+        [300, 250, 100],
+        [500, 200, 100],
+        [700, 150, 100],
+        [900, 200, 100],
+        [1100, 200, 100],
+        [1300, 200, 100],
+        [1500, 300, 100]
+    ],
+    [500,
+        [100, 350, 400, 3],
+        [175, 300, 100],
+        [300, 250, 100]
+    ],
+    [1000,
+        [100, 300, 900],
+        [200, 250, 100],
+        [300, 200, 100],
+        [400, 150, 100],
+        [600, 150, 100],
+        [700, 200, 100],
+        [800, 250, 100]
+    ],
+    [700,
+        [100, 300, 100],
+        [300, 250, 100],
+        [500, 300, 100],
+        [300, 350, 100, 1]
+    ],
+    [700,
+        [100, 300, 500],
+        [100, 350, 500, 0]
+    ],
+    [1800,
+        [100, 300, 300],
+        [500, 350, 150, 2],
+        [750, 300, 100],
+        [900, 200, 100],
+        [1100, 200, 100],
+        [1300, 300, 100],
+        [1500, 350, 200, 0],
+        [750, 350, 700, 1],
+        [200, 250, 100],
+        [400, 150, 100],
+        [600, 100, 900]
+    ],
+    [1300,
+        [100, 300, 300],
+        [500, 250, 300],
+        [900, 300, 300],
+        [600, 150, 100],
+        [500, 350, 300, 1]
+    ]
+];
+
+var xinc = 800;
+
+var seeds = [];
+
+var blocksel;
+
+var xincs = [];
+var xincsum = 0;
+var lastMole = 0;
+var nogen = false;
+
+var makeGen = function(x) {
+    var p = false;
+    if (seeds[x] !== undefined) {
+        blocksel = seeds[x];
+        p = true;
+    }
+    else {
+        blocksel = round(random(-0.4, blockGen.length - 1.500000001));
+    }
+    if (blockGen[blocksel][0][3] === "tm") {
+        blocks.push(new Block(blockGen[blocksel][0][0], blockGen[blocksel][0][1], blockGen[blocksel][0][2], "tm"));
+    }
+    for (var i = 1 ; i < blockGen[blocksel].length ; i++) {
+        if (blockGen[blocksel][i].length > 3) {
+            blocks.push(new Block(x + blockGen[blocksel][i][0], blockGen[blocksel][i][1], blockGen[blocksel][i][2], blockGen[blocksel][i][3], p));
+        }
+        else {
+            blocks.push(new Block(x + blockGen[blocksel][i][0], blockGen[blocksel][i][1], blockGen[blocksel][i][2], undefined, p));
+        }
+    }
+    if (blocksel !== blockGen.length - 1) {
+        seeds[xinc] = blocksel;
+    }
+    xincs.push(xinc);
+    lastMole -= blockGen[blocksel][0];
+    xinc += blockGen[blocksel][0];
+};
+
+mouseClicked = function() {
+    clicked = true;
+};
+
+var reset = function() {
+    nogen = false;
+    lastMole = 0;
+    Player1 = new Player();
+    score = 0;
+    mscore = 0;
+    scorenum = 23;
+    gameover = false;
+    xincs = [];
+    seeds = [];
+    xinc = 800;
+    rec = [];
+    blocks = [];
+};
+
+var LoadGame = function() {
+    cursor(ARROW);
+    switch (scene) {
+        case "Menu":
+            background(198, 211, 222);
+            drawPlayer(100, 197, 0, 3);
+            fill(214, 174, 101);
+             resetMatrix(); scale(sf);
+            //rect(100, 215, 100, 10, 5);
+            rect(240, 185, 100, 10, 5);
+            rect(380, 235, 100, 10, 5);
+            rect(520, 185, 100, 10, 5);
+            fill(198, 211, 222, 100);
+            rect(300, 200, 600, 400);
+            textFont(createFont("Skia"));
+            fill(94, 88, 73);
+            textSize(70);
+            text("MOLE RUNNER", 300, 50);
+            textSize(30);
+            textFont(createFont("Avenir"));
+            fill(0, 0, 0, 20);
+            noStroke();
+            translate(300, 300);
+            fill(255, 0, 0, 80);
+            if (mouseX / sf > 60 && mouseX / sf < 540 && mouseY / sf > 280 && mouseY / sf < 320) {
+                cursor(HAND);
+                scale(1.2);
+                fill(255, 0, 0, 120);
+                if (clicked) {
+                    if (firstplay) {
+                        scene = "How";
+                        goToPlay = true;
+                    }
+                    else {
+                        pauseSong("intro");
+                        playSong("mole");
+                        scene = "Play";
+                    }
+                }
+            }
+            translate(-300, -300);
+
+            rect(300, 300, 480, 40, 5);
+            fill(255, 255, 255);
+            text("Play", 300, 300);
+             resetMatrix(); scale(sf);
+            translate(300, 360);
+            fill(0, 255, 0, 80);
+            if (mouseX / sf > 60 && mouseX / sf < 540 && mouseY / sf > 340 && mouseY / sf < 380) {
+                cursor(HAND);
+                scale(1.2);
+                fill(0, 255, 0, 120);
+                if (clicked) {
+                    scene = "How";
+                    goToPlay = false;
+                }
+            }
+            translate(-300, -360);
+            rect(300, 360, 480, 40, 5);
+            fill(255, 255, 255);
+            text("How", 300, 360);
+             resetMatrix(); scale(sf);
+
+            textFont(createFont("Avenir"));
+
+            break;
+        case "How":
+            background(198, 211, 222);
+            noStroke();
+            fill(0, 0, 0);
+            textSize(25);
+            text("Welcome to Mole Runner!", 300, 20);
+            textAlign(LEFT, TOP);
+            textSize(14);
+            text("This is an endless runner game where you jump on blocks using the UP arrow key, speed up using the RIGHT arrow key, and try to get the best score. Your score increments by 6.02 x 10 ^ 23. Double-jumping is possible.\nBeware of the following items:", 20, 40, 560, Infinity);
+            textSize(14);
+
+            for (var i = 0 ; i < texts.length ; i++) {
+                fill(keycolors[i][0], keycolors[i][1], keycolors[i][2]);
+                rect(20, 140 + i * 25, 20, 20);
+                textFont(createFont("AvenirNext-Bold"));
+                text(keywords[i], 40, 132 + i * 25);
+                fill(0, 0, 0);
+                textFont(createFont("Avenir"));
+                text(texts[i], 50 + 8 * keywords[i].length, 131 + i * 25, 600 - (40 + 10 * keywords[i].length), Infinity);
+            }
+            textAlign(CENTER, CENTER);
+            textSize(30);
+            textFont(createFont("Skia"));
+            translate(300, 360);
+            if (goToPlay) {
+                fill(255, 0, 0, 80);
+            }
+            else {
+                fill(0, 0, 255, 80);
+            }
+            if (mouseX / sf > 60 && mouseX / sf < 540 && mouseY / sf > 340 && mouseY / sf < 380) {
+                cursor(HAND);
+                scale(1.2);
+                if (goToPlay) {
+                    fill(255, 0, 0, 120);
+                }
+                else {
+                    fill(0, 0, 255, 120);
+                }
+                if (clicked) {
+                    if (goToPlay) {
+                        pauseSong("intro");
+                        playSong("mole");
+                        scene = "Play";
+                    }
+                    else {
+                        scene = "Menu";
+                    }
+                }
+            }
+            translate(-300, -360);
+            rect(300, 360, 480, 40, 5);
+            fill(255, 255, 255);
+            if (goToPlay) {
+                text("Play", 300, 360);
+            }
+            else {
+                text("Back to Menu", 300, 360);
+            }
+             resetMatrix(); scale(sf);
+            fill(255, 255, 255);
+
+
+            textFont(createFont("Avenir"));
+            break;
+        case "Play":
+            firstplay = false;
+            pushMatrix();
+            inds = [];
+            binds = [];
+            gameGraphics();
+
+            for (var i = inds.length - 1 ; i >= 0 ; i--) {
+                trees.splice(inds[i], 1);
+            }
+            translate(-Player1.x + 100, 0);
+            trees = trees.sort(function(a, b) { return a.y - b.y; });
+            //translate(100, 0);
+            for (var i = 0 ; i < blocks.length ; i++) {
+                if (blocks[i].x + blocks[i].w > Player1.x - 300 && blocks[i].x < Player1.x + 700) {
+                    blocks[i].update();
+                }
+            }
+
+            if (frameCount % 200 === 0) {
+                //blocks.push(new Block(Player1.x + 900, 300, 200));
+            }
+            Player1.display();
+            for (var i = binds.length - 1 ; i >= 0 ; i--) {
+                blocks.splice(binds[i], 1);
+            }
+            for (var i = 0 ; i < blocks.length ; i++) {
+                if (blocks[i].pool && blocks[i].x + blocks[i].w > Player1.x - 300 && blocks[i].x < Player1.x + 700) {
+                    blocks[i].pooldraw();
+                }
+            }
+            if (Player1.x >= xinc - 600 && !nogen) {
+                makeGen(xinc);
+
+            }
+            if (Player1.x > 3000) {
+                //Player1.x -= 1000;
+                //Player1.y = 350;
+                //f = true;
+                //drawPlayer(Player1.x, rec[(Player1.x - 1000) / 3][0], rec[(Player1.x - 1000) / 3][1]);
+            }
+            fp = findPos(Player1.x);
+            if (fp) {
+                drawPlayer(Player1.x, fp[0], fp[1], 1.3, color(255, 0, 0));
+            }
+            popMatrix();
+            if (!gameover) {
+                textSize(18);
+                if (Player1.COing) {
+                    //text("You've ran into CO, O2 effects are negated for a few seconds", 300, 150);
+                }
+                if (frameCount % 5 === 0) {
+                    score += 6.02 / Math.pow(10, (scorenum - 23));
+                    mscore ++;
+                }
+                fill(0, 0, 0, 100);
+                textFont(createFont("AvenirNext-Bold"));
+                textSize(40);
+                while (score > 10) {
+                    score /= 10;
+                    scorenum += 1;
+                }
+
+                dispscore = Math.round(score * 100) / 100;
+                dispscore = dispscore.toString();
+                if (dispscore.indexOf(".") === -1) {
+                    dispscore += ".";
+                }
+                while (dispscore.slice(dispscore.indexOf(".")).length <= 2) {
+                    dispscore += "0";
+                }
+                text("SCORE: " + dispscore + " x 10 ^ " + scorenum, 300, 30);
+
+                textFont(createFont("Avenir"));
+                textSize(20);
+                text(mscore + " moles", 300, 60);
+                textFont(createFont("AvenirNext-Italic"));
+                textSize(18);
+                textFont(createFont("Avenir"));
+                if (Player1.invis >= 100 || Player1.invisible) {
+                    ic = color(0, 0, 0, 200);
+                }
+                else {
+                    ic = color(0, 0, 0, 50);
+                }
+                fill(ic);
+                text("Invisibility: ", 200, 110);
+                stroke(ic);
+                noFill();
+                rect(340, 110, 164, 22);
+                fill(ic);
+                noStroke();
+                rect(340 - (100 - Player1.invis) * (80 / 100), 110, 160 * (Player1.invis / 100), 18);
+            }
+            if (frameCount % 10 === 0) {
+                tmparts.push([0, 350, random(0, 100), random(5, 10)]);
+            }
+            spl = [];
+            for (var i = 0 ; i < tmparts.length ; i++) {
+                tmparts[i][0] = tmparts[i][2] + cos((Math.PI / 180) * (350 - tmparts[i][1]) * 4) * tmparts[i][3];
+                tmparts[i][1] -= 2;
+                if (tmparts[i][1] < 0) {
+                    spl.push(i);
+                }
+            }
+            for (var i = spl.length - 1 ; i >= 0 ; i--) {
+                tmparts.splice(spl[i], 1);
+            }
+            if (gameover) {
+                fill(0, 0, 0, 200);
+                rect(300, 200, 600, 400);
+                fill(255, 255, 255);
+                textSize(60);
+                textFont(createFont("AvenirNext-Bold"));
+                text("GAME OVER", 300, 50);
+                textFont(createFont("AvenirNext-Italic"));
+                textSize(20);
+                text(deathMessage, 300, 90);
+                if (deathMessage === dms[2]) {
+                    text("Pro Tip: jump on as many blocks as possible to avoid\ncollisions with yourself", 300, 130);
+                }
+                textSize(40);
+                textFont(createFont("Avenir"));
+                dispscore = Math.round(score * 100) / 100;
+                dispscore = dispscore.toString();
+                if (dispscore.indexOf(".") === -1) {
+                    dispscore += ".";
+                }
+                while (dispscore.slice(dispscore.indexOf(".")).length <= 2) {
+                    dispscore += "0";
+                }
+                text("Your Score: " + dispscore + " x 10 ^ " + scorenum, 300, 200);
+                textSize(22);
+                text(mscore + " moles", 300, 240);
+                textSize(30);
+                textFont(createFont("Skia"));
+                noStroke();
+                translate(300, 300);
+                fill(255, 0, 0, 30);
+                if (mouseX / sf > 60 && mouseX / sf < 540 && mouseY / sf > 280 && mouseY / sf < 320) {
+                    cursor(HAND);
+                    scale(1.2);
+                    fill(255, 0, 0, 60);
+                    if (clicked) {
+                        scene = "Play";
+                        pauseSong("victory");
+                        playSong("mole");
+                        reset();
+                    }
+                }
+                translate(-300, -300);
+
+                rect(300, 300, 480, 40, 5);
+                fill(255, 255, 255);
+                text("Play Again", 300, 300);
+                 resetMatrix(); scale(sf);
+                translate(300, 360);
+                fill(0, 0, 255, 30);
+                if (mouseX / sf > 60 && mouseX / sf < 540 && mouseY / sf > 340 && mouseY / sf < 380) {
+                    cursor(HAND);
+                    scale(1.2);
+                    fill(0, 0, 255, 60);
+                    if (clicked) {
+                        scene = "Menu";
+                        pauseSong("victory");
+                        playSong("intro");
+                        reset();
+                    }
+                }
+                translate(-300, -360);
+                rect(300, 360, 480, 40, 5);
+                fill(255, 255, 255);
+                text("Menu", 300, 360);
+                 resetMatrix(); scale(sf);
+                fill(255, 255, 255);
+
+
+                textFont(createFont("Avenir"));
+
+            }
+            if (Player1.Moled && !gameover) {
+                if (Player1.x !== Player1.nx) {
+                    tv += 2;
+                    if (tv >= 255) {
+                        Player1.x = Player1.nx;
+                        Player1.y = Player1.ny;
+                        nogen = false;
+                    }
+                }
+                else {
+                    tv -= 2;
+                    if (tv <= 0) {
+                        Player1.Moled = false;
+                    }
+                    if (tv < 20) {
+                        textSize(100);
+                        fill(0, 0, 0, 50);
+                        text("GO!", 300, 170);
+                    }
+                    else if (tv < 100) {
+                        textSize(80);
+                        fill(0, 0, 0, 50);
+                        text("Ready...", 300, 170);
+                    }
+                }
+                fill(0, 0, 0, tv);
+                rect(300, 200, 600, 400);
+                if (findPos(Player1.x) && Math.abs(Player1.y - findPos(Player1.x)[0]) < 5 && Player1.pool !== 0) {
+                    urgent = true;
+                }
+                else {
+                    urgent = false;
+                }
+            }
+            else {
+                urgent = false;
+            }
+            break;
+    }
+};
+
+draw = function() {
+    LoadGame();
+    clicked = false;
+};
+
+    		}
+    	};
+    	}
+
+    	var canvas = document.getElementById("game");
+    	var processingInstance = new Processing(canvas, programCode);
+    </script>
+</html>
